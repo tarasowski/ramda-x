@@ -5,21 +5,21 @@ Ramda X is a super small API with only 10 most important methods for functional 
 
 * Implemented API methods:
 
-* curry()
-* compose()
-* pipe()
-* map()
-* filter()
+- curry()
+- compose()
+- pipe()
+- map()
+- filter()
 
 * Methods on the waiting list:
 
-* pluck() 
-* prop() // to use it with map
-* propEq() // to use it with filter()
-* functor
-* monads
+* pluck() // -> returns a new list by plucking the same named poperty -> works on lists
+* prop() // to use it with map -> returns a property -> works on objects
+* propEq() // to use it with filter() -> returns a boolean
+- n/a
+- n/a
 
-If you want the full suite, just use 
+If you want the full suite, just use the original [Ramda](https://ramdajs.com). 
 
 
 
