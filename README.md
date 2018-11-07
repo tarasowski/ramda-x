@@ -11,7 +11,7 @@ Ramda X is a super small API with only 10 most important methods for functional 
 - **IV.** map() -> works only on lists
 - **V.** filter() -> works only on lists
 - **VI.** prop() -> works only on objects `prop('name')({name: 'Dimitri', location: 'Berlin'})`
-- **VII.** propEq() // works only on object `propEq('location', 'Berlin')`
+- **VII.** propEq() // works only on objects `propEq('location', 'Berlin')`
 
 ### Methods on the waiting list:
 - **VIII.** n/a
