@@ -1,4 +1,4 @@
-const trace = label => value => (console.log(`${label}: ${value}`), value)
+const trace = label => value => (console.log(`${label}: ${JSON.stringify(value, null, 2)}`), value)
 
 function curry(fn) {
     return function f1(...args) {
@@ -24,11 +24,6 @@ const propEq = curry((key, value, data) => {
         : false
 })
 
-const pluck = curry((property, data) => {
-    return data.map(prop(property), data)
-})
-
-
 
 module.exports = {
     curry,
@@ -37,7 +32,6 @@ module.exports = {
     compose,
     map,
     filter,
-    pluck,
     prop,
     propEq
 }

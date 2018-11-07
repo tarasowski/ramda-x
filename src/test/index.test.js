@@ -20,16 +20,6 @@ test('should call a filter function and remove an element from an array', assert
     assert.end()
 })
 
-test('should return only the value of the name property', assert => {
-    const msg = 'returns Dimitri'
-    const testArray = [
-        { name: 'Dimitri', location: 'Berlin', isActive: true }
-    ]
-    const actual = pluck('name')(testArray)
-    const expected = ['Dimitri']
-    assert.same(actual, expected, msg)
-    assert.end()
-})
 
 test('should return only the value of the property', assert => {
     const msg = 'return Dimitri'
