@@ -8,20 +8,19 @@ Ramda X is a super small API with only 10 most important methods for functional 
 - **I.** curry()
 - **II.** compose()
 - **III.** pipe()
-- **IV.** map()
-- **V.** filter()
+- **IV.** map() -> works only on lists
+- **V.** filter() -> works only on lists
+- **VI.** pluck() -> works only on lists `pluck('name')([{name: 'Dimitri', location: 'Berlin'}])`
+- **VII.** prop() -> works only on objects `prop('name')({name: 'Dimitri', location: 'Berlin'})`
+- **VIII.** propEq() // works only on object `propEq('location', 'Berlin')`
 
 ### Methods on the waiting list:
-
-- **VI.** pluck() // -> returns a new list by plucking the same named poperty -> works on lists
-- **VII.** prop() // to use it with map -> returns a property -> works on objects
-- **VIII.** propEq() // to use it with filter() -> returns a boolean
 - **IX.** reduce()
 - **X.** n/a
 
 ### Additional methods for debugging Ramda X
 
-- **Zero** trace() ```js trace('label')(value)
+- trace() -> can be used to debug compose/pipe `trace('label')(value)`
 
 If you want the full suite, just use the original [Ramda](https://ramdajs.com). 
 

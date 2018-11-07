@@ -12,9 +12,23 @@ const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x)
 
 const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x)
 
-const map = curry((fn, array) => array.map(fn))
+const map = curry((fn, data) => data.map(fn))
 
-const filter = curry((fn, array) => array.filter(fn))
+const filter = curry((fn, data) => data.filter(fn))
+
+const prop = curry((property, data) => data[property])
+
+const propEq = curry((key, value, data) => {
+    return data[key] === value
+        ? true
+        : false
+})
+
+const pluck = curry((property, data) => {
+    return data.map(prop(property), data)
+})
+
+
 
 module.exports = {
     curry,
@@ -22,5 +36,8 @@ module.exports = {
     pipe,
     compose,
     map,
-    filter
+    filter,
+    pluck,
+    prop,
+    propEq
 }
