@@ -68,6 +68,14 @@ console.log(extractNamesFromMessage(message))
 //   }
 // ]
 //[ 'Dimitri', 'John', 'Mike' ]
+
+const filterNamesFromMessage = compose(
+    filter(propEq('name', 'Dimitri')),
+    prop('Records')
+)
+
+console.log(filterNamesFromMessage(message))
+// [ { name: 'Dimitri', isAdmin: true } ]
 ````
 
 
