@@ -5,11 +5,11 @@ Ramda X is a super small API with only 10 most important methods for functional 
 
 * Implemented API methods:
 
-**I.** curry()
-**II.** compose()
-**III.** pipe()
-**IV.** map()
-**V.** filter()
+- **I.** curry()
+- **II.** compose()
+- **III.** pipe()
+- **IV.** map()
+- **V.** filter()
 
 * Methods on the waiting list:
 
