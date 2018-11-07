@@ -2,20 +2,21 @@
 
 Ramda X is a super small API with only 10 most important methods for functional programming. Original Ramda library is too big and abstracts almost everything away from the JavaScript language. That's why Ramda X uses the most important methods and leaves everything as it is. All implemented methods are auto-curried!!!
 
+**Important:** Data comes last!
 
 ### Implemented API methods:
 
 - **I.** curry()
 - **II.** compose()
 - **III.** pipe()
-- **IV.** map() -> works only on lists
-- **V.** filter() -> works only on lists
+- **IV.** map() -> works only on arrays
+- **V.** filter() -> works only on arrays
 - **VI.** prop() -> works only on objects `prop('name')({name: 'Dimitri', location: 'Berlin'})`
 - **VII.** propEq() // works only on objects `propEq('location', 'Berlin')`
+- **VIII.** reduce() => works only on arrays `reduce(fn, null || 'acc value', {location: Berlin})`
 
 ### Methods on the waiting list:
-- **VIII.** n/a
-- **IX.** reduce()
+- **IX.** n/a
 - **X.** n/a
 
 ### Additional methods for debugging Ramda X

@@ -24,6 +24,14 @@ const propEq = curry((key, value, data) => {
         : false
 })
 
+const reduce = curry((fn, config, data) => {
+    return config === null
+        ? data.reduce(fn)
+        : data.reduce(fn, config)
+})
+
+
+
 
 module.exports = {
     curry,
@@ -33,5 +41,6 @@ module.exports = {
     map,
     filter,
     prop,
-    propEq
+    propEq,
+    reduce
 }

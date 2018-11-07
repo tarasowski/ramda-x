@@ -1,4 +1,4 @@
-const { trace, compose, map, propEq, filter, curry, pipe, prop } = require('../index')
+const { trace, compose, map, propEq, filter, curry, pipe, prop, reduce } = require('../index')
 const test = require('tape')
 
 
@@ -45,6 +45,26 @@ test('should return true for a given value', assert => {
 
     const actual = filter(isAdmin, users)
     const expected = [{ name: 'Dimitri', isAdmin: true }]
+    assert.same(actual, expected, msg)
+    assert.end()
+})
+
+test('should return a sum from an array', assert => {
+    const msg = 'returns 6'
+    const testArray = [1, 2, 3]
+    const sum = (acc, val) => acc + val
+    const actual = reduce(sum, null, testArray)
+    const expected = 6
+    assert.same(actual, expected, msg)
+    assert.end()
+})
+
+test('should construct a new object', assert => {
+    const msg = 'returns an object with location prop'
+    const user = [{ location: 'Berlin' }]
+    const constructObj = (acc, val) => Object.assign(acc, val)
+    const actual = reduce(constructObj, null, user)
+    const expected = { location: 'Berlin' }
     assert.same(actual, expected, msg)
     assert.end()
 })
