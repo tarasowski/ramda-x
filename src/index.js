@@ -1,6 +1,6 @@
 const trace = label => value => (console.log(`${label}: ${JSON.stringify(value, null, 2)}`), value)
 
-function curry(fn) {
+const curry = (fn) => {
     return function f1(...args) {
         return args.length >= fn.length
             ? fn(...args)
