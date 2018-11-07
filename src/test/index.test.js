@@ -1,4 +1,4 @@
-const { trace, compose, map, propEq, filter, pluck, curry, pipe, prop } = require('../index')
+const { trace, compose, map, propEq, filter, curry, pipe, prop } = require('../index')
 const test = require('tape')
 
 
