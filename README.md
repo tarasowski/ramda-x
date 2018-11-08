@@ -18,6 +18,7 @@ Ramda X is a super small API with only 10 most important methods for functional 
 ### Methods on the waiting list:
 - **IX.** composeP() -> composition with Promises
 - **X.** monads
+- **X.** propNotEq() -> removing a an element from an array
 
 ### Additional methods for debugging Ramda X
 
