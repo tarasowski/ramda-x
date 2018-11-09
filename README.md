@@ -6,7 +6,7 @@ Ramda X is a super small API with only 10 most important methods for functional 
 
 ### Implemented API methods:
 
-- **I.** curry() **!!!will be removed in the next version**
+- **I.** curry() **!!!will be removed FROM THE PUBLIC API, but will stay as internal function**
 - **II.** compose()
 - **III.** pipe() **!!!will be removed in the next version**
 - **IV.** map() -> works only on arrays
