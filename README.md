@@ -6,9 +6,9 @@ Ramda X is a super small API with only 10 most important methods for functional 
 
 ### Implemented API methods:
 
-- **I.** curry()
+- **I.** curry() **!!!will be removed in the next version**
 - **II.** compose()
-- **III.** pipe()
+- **III.** pipe() **!!!will be removed in the next version**
 - **IV.** map() -> works only on arrays
 - **V.** filter() -> works only on arrays
 - **VI.** prop() -> works only on objects `prop('name')({name: 'Dimitri', location: 'Berlin'})`
