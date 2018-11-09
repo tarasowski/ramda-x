@@ -2,13 +2,17 @@
 
 Ramda X is a super small API with only 10 most important methods for functional programming. Original Ramda library is too big and abstracts almost everything away from the JavaScript language. That's why Ramda X uses the most important methods and leaves everything as it is. All implemented methods are auto-curried!!!
 
+**Upcoming breaking changes:**
+1. `curry()`will be removed from the public API, but will stay internally to make functions curried.
+2. `pipe()` will be removed from the API, we want to use `compose()` because we want to mirror the mathematical version much more closely. 
+
 **Important:** Data comes last!
 
 ### Implemented API methods:
 
-- **I.** curry() **!!!will be removed FROM THE PUBLIC API, but will stay as internal function**
+- **I.** curry() 
 - **II.** compose()
-- **III.** pipe() **!!!will be removed in the next version**
+- **III.** pipe() - depricated!
 - **IV.** map() -> works only on arrays
 - **V.** filter() -> works only on arrays
 - **VI.** prop() -> works only on objects `prop('name')({name: 'Dimitri', location: 'Berlin'})`
