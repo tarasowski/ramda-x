@@ -12,17 +12,16 @@ Ramda X is a super small API with only 10 most important methods for functional 
 
 - **I.** curry() 
 - **II.** compose()
-- **III.** pipe() - depricated!
-- **IV.** map() -> works only on arrays
-- **V.** filter() -> works only on arrays
-- **VI.** prop() -> works only on objects `prop('name')({name: 'Dimitri', location: 'Berlin'})`
-- **VII.** propEq() -> works only on objects `propEq('location', 'Berlin')`
-- **VIII.** reduce() -> works only on arrays `reduce(fn, null || 'acc value', {location: Berlin})`
+- **III.** map() -> works only on arrays
+- **IV.** filter() -> works only on arrays
+- **V.** prop() -> works only on objects `prop('name')({name: 'Dimitri', location: 'Berlin'})`
+- **VI.** propEq() -> works only on objects `propEq('location', 'Berlin')`
+- **VII.** reduce() -> works only on arrays `reduce(fn, null || 'acc value', {location: Berlin})`
 
 ### Methods on the waiting list:
-- **IX.** composeP() -> composition with Promises
-- **X.** monads
-- **X.** propNotEq() -> removing a an element from an array
+- composeP() -> composition with Promises
+- monads
+- propNotEq() -> removing a an element from an array
 
 ### Additional methods for debugging Ramda X
 
