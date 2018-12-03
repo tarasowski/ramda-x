@@ -36,20 +36,21 @@ const Task = (computation, cleanup = () => { }) => ({
     map: f => Task((reject, resolve) => computation((a) => reject(a), b => resolve(f(b)), cleanup)),
 })
 
-const Right = x =>
+const Either = () => { }
+
+Either.Right = x =>
     ({
         chain: f => f(x),
         map: f => Right(f(x)),
         fold: f => (f, g) => g(x),
     })
 
-const Left = x =>
+Either.Left = x =>
     ({
         chain: f => Left(x),
         map: f => Left(x),
         fold: (f, g) => f(x),
     })
-
 
 
 
@@ -63,6 +64,5 @@ module.exports = {
     propEq,
     reduce,
     Task,
-    Right,
-    Left
+    Either
 }
