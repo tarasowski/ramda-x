@@ -34,8 +34,8 @@ const Task = (computation, cleanup = () => { }) => ({
     fork: computation,
     cleanup,
     map: f => Task((reject, resolve) => computation((a) => reject(a), b => resolve(f(b)), cleanup)),
+    chain: f => Task((reject, resolve) => computation((a) => reject(a), b => f(b).fork(reject, resolve), cleanup)),
 })
-
 const Either = () => { }
 
 Either.Right = x =>
