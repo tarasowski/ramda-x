@@ -138,7 +138,7 @@ const res = getPort()
 import {Either} = require('ramda-x')
 
 const fromNullable = x =>
-    x !== null ? Right(x) : Left(x)
+    x !== null ? Either.Right(x) : Either.Left(x)
 
 const findColor = name =>
     fromNullable({ red: '#ff4444', blue: '#3b5998', yellow: '#fffG8F' }[name])
@@ -150,13 +150,13 @@ const result = findColor('yellow').map(c => c.slice(1)).fold(err => 'nothing fou
 
 ```js
 const fromNullable = x =>
-    x !== null ? Right(x) : Left(x)
+    x !== null ? Either.Right(x) : Either.Left(x)
 
 const tryCatch = f => {
     try {
-        return Right(f())
+        return Either.Right(f())
     } catch (e) {
-        return Left(e)
+        return Either.Left(e)
     }
 }
 
