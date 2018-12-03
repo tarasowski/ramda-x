@@ -83,22 +83,28 @@ console.log(filterNamesFromMessage(message))
 ## Task - Lazy Evaluation / Isolation of Side Effects
 
 ```js
-const Task = (computation, cleanup = () => { }) => ({
-    fork: computation,
-    cleanup,
-    map: f => Task((reject, resolve) => computation((a) => reject(a), b => resolve(f(b)), cleanup)),
-})
+const {Task} = require('ramda-x')
 
-
+// pure function
 const readFile = (filename, enc) =>
     Task((reject, resolve) =>
         fs.readFile(filename, enc, (err, content) =>
             err ? reject(err) : resolve(content))
     )
+// pure function
+const writeFile = (filename, contents) =>
+    Task((reject, resolve) =>
+        fs.writeFile(filename, contents, (err, success) =>
+            err ? reject(err) : resolve(success))
+    )
 
+// pure function
 const app = readFile('config.json', 'utf-8')
-app.map(content => content.replace(/8/g, '6'))
-    .fork(e => console.log('error', e), data => console.log('success', data))
+    .map(content => content.replace(/8/g, '9'))
+    .chain(contents => writeFile('config2.json', contents))
+
+// impure function with side effects
+app.fork(e => console.log('error', e), succes => console.log('success'))
 
 ```
 
