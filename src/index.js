@@ -51,6 +51,8 @@ Either.Left = x =>
         map: f => Left(x),
         fold: (f, g) => f(x),
     })
+Either.fromNullable = x =>
+    x !== null ? Either.Right(x) : Either.Left(x)
 
 
 module.exports = {
