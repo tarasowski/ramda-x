@@ -108,10 +108,12 @@ app.fork(e => console.log('error', e), succes => console.log('success'))
 
 ```
 
-## Either - Instead of If/Else + Composition
+## Try/Catch Examples
 
 ```js
-import {Either} = require('ramda-x')
+const {Either} = require('ramda-x')
+const fs = require('fs')
+
 
 const tryCatch = f => {
     try {
@@ -120,19 +122,29 @@ const tryCatch = f => {
         return Either.Left(e)
     }
 }
-const fs = require('fs')
 
 const getPort = () =>
-    tryCatch(() => fs.readFileSync('confg.json'))
+    tryCatch(() => fs.readFileSync('config.json'))
         .chain(c => tryCatch(() => JSON.parse(c)))
         .fold(e => 3000,
             c => c.port)
 
-const result = getPort()
+const res = getPort()
+``` 
 
-console.log(
-    result
-)
+## Either - Instead of If/Else + Composition
+
+```js
+import {Either} = require('ramda-x')
+
+const fromNullable = x =>
+    x !== null ? Right(x) : Left(x)
+
+const findColor = name =>
+    fromNullable({ red: '#ff4444', blue: '#3b5998', yellow: '#fffG8F' }[name])
+
+
+const result = findColor('yellow').map(c => c.slice(1)).fold(err => 'nothing found', c => c.toUpperCase())
 ```
 ## Some other examples
 
