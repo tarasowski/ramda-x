@@ -53,7 +53,6 @@ Either.Left = x =>
     })
 
 
-
 module.exports = {
     curry,
     trace,
