@@ -13,8 +13,8 @@ Ramda X is a super small API with only 10 most important methods for functional 
 - **V.** prop() -> works only on objects `prop('name')({name: 'Dimitri', location: 'Berlin'})`
 - **VI.** propEq() -> works only on objects `propEq('location', 'Berlin')`
 - **VII.** reduce() -> works only on arrays `reduce(fn, null || 'acc value', {location: Berlin})`
-- **VIII.*** Task() -> for lazy evaluation and isolation of side effects
-- **IX.*** Either.Right(x) || Either.Left(x)
+- **VIII.** Task() -> for lazy evaluation and isolation of side effects
+- **IX.** Either.Right(x) || Either.Left(x)
 
 ### Methods on the waiting list:
 - composeP() -> composition with Promises
