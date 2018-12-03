@@ -30,17 +30,39 @@ const reduce = curry((fn, config, data) => {
         : data.reduce(fn, config)
 })
 
+const Task = (computation, cleanup = () => { }) => ({
+    fork: computation,
+    cleanup,
+    map: f => Task((reject, resolve) => computation((a) => reject(a), b => resolve(f(b)), cleanup)),
+})
+
+const Right = x =>
+    ({
+        chain: f => f(x),
+        map: f => Right(f(x)),
+        fold: f => (f, g) => g(x),
+    })
+
+const Left = x =>
+    ({
+        chain: f => Left(x),
+        map: f => Left(x),
+        fold: (f, g) => f(x),
+    })
+
 
 
 
 module.exports = {
     curry,
     trace,
-    pipe,
     compose,
     map,
     filter,
     prop,
     propEq,
-    reduce
+    reduce,
+    Task,
+    Right,
+    Left
 }
