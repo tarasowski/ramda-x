@@ -23,9 +23,9 @@ const curry = (fn) => {
 
 const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x)
 
-const map = f => xs => xs.map(f)
+const map = f => xs => xs.reduce((a, c) => a.concat([f(c)]), [])
 
-const filter = pred => xs => xs.filter(pred)
+const filter = pred => xs => xs.reduce((newArr, item) => pred(item) ? newArr.concat([item]) : newArr, [])
 
 const prop = curry((property, data) => data[property])
 
