@@ -108,6 +108,16 @@ app.fork(e => console.log('error', e), succes => console.log('success'))
 
 ```
 
+## Lifting a value into a type
+
+```js
+const f = x => x.concat('!!!')
+
+const res = Task.of('hello').map(f)
+
+res.fork(e => 'error', d => console.log(d)) // hello!!!
+```
+
 ## Try/Catch Examples
 
 ```js
