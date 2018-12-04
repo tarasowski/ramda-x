@@ -14,7 +14,7 @@ Ramda X is a super small API with only 10 most important methods for functional 
 - **VI.** propEq() -> works only on objects `propEq('location', 'Berlin')`
 - **VII.** reduce() -> works only on arrays `reduce(fn, null || 'acc value', {location: Berlin})`
 - **VIII.** Task() || Task.of(x) || Task.map(), Task.chain(), Task.ap() -> for lazy evaluation and isolation of side effects
-- **IX.** Either.Right(x) || Either.Left(x) || Either.fromNullable(x) || Either.of(x) -> for branching
+- **IX.** Either.Right(x) || Either.Left(x) || Either.fromNullable(x) || Either.of(x) || Either.try(f) -> for branching
 
 ### Methods on the waiting list:
 - composeP() -> composition with Promises
@@ -142,6 +142,27 @@ const getPort = () =>
 
 const res = getPort()
 ``` 
+
+## Try with Either.try(f)
+
+```js
+const parse = Either.try(JSON.parse)
+
+
+const eitherToTask = e =>
+    e.fold(Task.rejected, Task.of)
+
+const findPost = id =>
+    httpGet(url(id))
+        .map(parse)
+        .chain(eitherToTask)
+
+const main = ([id]) =>
+    Task.of(title => [title]).ap(findPost(id))
+
+id.chain(main).fork(console.error, x => console.log('success', x))
+
+```
 
 ## Either - Instead of If/Else + Composition
 
