@@ -30,6 +30,8 @@ const reduce = curry((fn, config, data) => {
         : data.reduce(fn, config)
 })
 
+/* Task Start */
+
 const Task = (computation, cleanup = () => { }) => ({
     fork: computation,
     cleanup,
@@ -39,25 +41,36 @@ const Task = (computation, cleanup = () => { }) => ({
 
 Task.of = b => Task((_, resolve) => resolve(b))
 
-const Either = () => { }
+/* Task End */
 
-Either.Right = x =>
+/* Either Start */
+
+const Right = x =>
     ({
         chain: f => f(x),
         map: f => Either.Right(f(x)),
         fold: f => (f, g) => g(x),
     })
 
-Either.Left = x =>
+const Left = x =>
     ({
         chain: f => Either.Left(x),
         map: f => Either.Left(x),
         fold: (f, g) => f(x),
     })
-Either.fromNullable = x =>
+const fromNullable = x =>
     x !== null ? Either.Right(x) : Either.Left(x)
 
-Either.of = x => Either.Right(x)
+const of = x => Either.Right(x)
+
+const Either = {
+    Right,
+    Left,
+    fromNullable,
+    of
+}
+
+/* Either End */
 
 module.exports = {
     curry,
