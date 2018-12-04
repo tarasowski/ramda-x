@@ -23,9 +23,9 @@ const curry = (fn) => {
 
 const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x)
 
-const map = f => xs => xs.reduce((a, c) => a.concat([f(c)]), [])
+const map = curry((f, xs) => xs.reduce((a, c) => a.concat([f(c)]), []))
 
-const filter = pred => xs => xs.reduce((newArr, item) => pred(item) ? newArr.concat([item]) : newArr, [])
+const filter = curry((pred, xs) => xs.reduce((newArr, item) => pred(item) ? newArr.concat([item]) : newArr, []))
 
 const prop = curry((property, data) => data[property])
 
@@ -35,11 +35,10 @@ const propEq = curry((key, value, data) => {
         : false
 })
 
-const reduce = curry((fn, config, data) => {
-    return config === null
-        ? data.reduce(fn)
-        : data.reduce(fn, config)
-})
+const reduce = curry((fn, config, x) =>
+    config === null
+        ? x.reduce(fn)
+        : x.reduce(fn, config))
 
 /* Task Start */
 
