@@ -49,7 +49,7 @@ const Right = x =>
     ({
         chain: f => f(x),
         map: f => Either.Right(f(x)),
-        fold: f => (f, g) => g(x),
+        fold: (f, g) => g(x),
     })
 
 const Left = x =>
