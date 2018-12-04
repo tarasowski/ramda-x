@@ -44,19 +44,20 @@ const Either = () => { }
 Either.Right = x =>
     ({
         chain: f => f(x),
-        map: f => Right(f(x)),
+        map: f => Either.Right(f(x)),
         fold: f => (f, g) => g(x),
     })
 
 Either.Left = x =>
     ({
-        chain: f => Left(x),
-        map: f => Left(x),
+        chain: f => Either.Left(x),
+        map: f => Either.Left(x),
         fold: (f, g) => f(x),
     })
 Either.fromNullable = x =>
     x !== null ? Either.Right(x) : Either.Left(x)
 
+Either.of = x => Either.Right(x)
 
 module.exports = {
     curry,
