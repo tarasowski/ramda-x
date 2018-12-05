@@ -1,3 +1,4 @@
+const util = require('util')
 
 /* A helper for delaying the execution of a function */
 const delayed = typeof setImmediate !== 'undefined' ? setImmediate
@@ -52,64 +53,68 @@ const reduce = curry((fn, config, x) =>
 
 /* Task Start */
 
-
-
-const Task = (computation, cleanup = () => { }) => ({
-    fork: computation,
+const Task = (fork = computation, cleanup = () => { }) => ({
+    fork,
+    inspect: console.log(`Task(--- ${fork.toString()} ---)`),
     cleanup,
-    map: f => Task((reject, resolve) => computation(a => reject(a), b => resolve(f(b)), cleanup)),
-    chain: f => Task((reject, resolve) => computation(a => reject(a), b => f(b).fork(reject, resolve), cleanup)),
-    ap: b2 => Task((reject, resolve) => {
+    map: f =>
+        Task((reject, resolve) => fork(a => reject(a), b => resolve(f(b))), cleanup),
+    chain: f =>
+        Task((reject, resolve) => fork(a => reject(a), b => f(b).fork(reject, resolve)), cleanup),
+    ap: b2 =>
+        Task((reject, resolve) => {
 
-        let func = false
-        let funcLoaded = false
-        let val = false
-        let valLoaded = false
-        let rejected = false
-        let allState
+            let func = false
+            let funcLoaded = false
+            let val = false
+            let valLoaded = false
+            let rejected = false
+            let allState
 
-        const cleanupBoth = state => {
-            state[0] = {}
-            state[1] = {}
-        }
+            const cleanupBoth = state => {
+                state[0] = {}
+                state[1] = {}
+            }
 
-        const guardResolve = setter => {
-            return (x) => {
-                if (rejected) {
-                    return
-                }
-                setter(x)
-                if (funcLoaded && valLoaded) {
-                    delayed(() => cleanupBoth(allState))
-                    return resolve(func(val))
-                } else {
-                    return x
+            const guardResolve = setter => {
+                return (x) => {
+                    if (rejected) {
+                        return
+                    }
+                    setter(x)
+                    if (funcLoaded && valLoaded) {
+                        delayed(() => cleanupBoth(allState))
+                        return resolve(func(val))
+                    } else {
+                        return x
+                    }
                 }
             }
-        }
-        const guardReject = x => {
-            if (!rejected) {
-                rejected = true
-                return reject(x)
+            const guardReject = x => {
+                if (!rejected) {
+                    rejected = true
+                    return reject(x)
+                }
             }
-        }
 
-        const thisState = computation(guardReject, guardResolve((x) => {
-            funcLoaded = true
-            func = x
-        }))
+            const thisState = computation(guardReject, guardResolve((x) => {
+                funcLoaded = true
+                func = x
+            }))
 
-        const thatState = b2.fork(guardReject, guardResolve((x) => {
-            valLoaded = true
-            val = x
-        }))
-        return allState = [thisState, thatState]
-    })
+            const thatState = b2.fork(guardReject, guardResolve((x) => {
+                valLoaded = true
+                val = x
+            }))
+            return allState = [thisState, thatState]
+        })
 
 })
 
-Task.of = b => Task((_, resolve) => resolve(b))
-Task.rejected = a => Task((reject, _) => reject(a))
+Task.of = b =>
+    Task((_, resolve) => resolve(b))
+Task.rejected = a =>
+    Task((reject, _) => reject(a))
 
 /* Task End */
 
@@ -122,6 +127,7 @@ const Right = x =>
         chain: f => f(x),
         map: f => Right(f(x)),
         fold: (f, g) => g(x),
+        inspect: console.log(`Right(--- ${util.inspect(x, { showHidden: false, depth: null })} ---)`)
     })
 
 
@@ -131,6 +137,7 @@ const Left = x =>
         chain: f => Left(x),
         map: f => Left(x),
         fold: (f, g) => f(x),
+        inspect: console.log(`Left(--- ${util.inspect(x, { showHidden: false, depth: null })} ---)`)
     })
 
 const fromNullable = x =>
