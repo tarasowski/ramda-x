@@ -23,7 +23,17 @@ const curry = (fn) => {
 
 const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x)
 
-const map = curry((f, xs) => xs.reduce((a, c) => a.concat([f(c)]), []))
+const map = curry((f, x) =>
+    Array.isArray(x)
+        ? x.reduce((a, c) => a.concat([f(c)]), []) // map over regular arrays map(console.log, [1, 2, 3])
+        : x.map(f) // map over types Either, Task // compose(map(f),map(f),fromNullable)(data)
+)
+
+const fold = (f, g) => e => e.fold(f, g)
+
+const chain = f => e => e.chain(f)
+
+const ap = b2 => e => e.ap(b2)
 
 const filter = curry((pred, xs) => xs.reduce((newArr, item) => pred(item) ? newArr.concat([item]) : newArr, []))
 
@@ -105,6 +115,7 @@ Task.rejected = a => Task((reject, _) => reject(a))
 
 /* Either Start */
 
+
 const Right = x =>
     ({
         ap: b2 => b2.map(x),
@@ -113,6 +124,7 @@ const Right = x =>
         fold: (f, g) => g(x),
     })
 
+
 const Left = x =>
     ({
         ap: b2 => Left(x),
@@ -120,16 +132,17 @@ const Left = x =>
         map: f => Left(x),
         fold: (f, g) => f(x),
     })
+
 const fromNullable = x =>
-    x !== null ? Either.Right(x) : Either.Left(x)
+    x !== null ? Right(x) : Left(x)
 
 const of = x => Right(x)
 
 const tryCatch = f => x => {
     try {
-        return Either.Right(x)
+        return Right(f(x))
     } catch (e) {
-        return Either.Left(x)
+        return Left(e)
     }
 }
 
@@ -138,7 +151,7 @@ const Either = {
     Left,
     fromNullable,
     of,
-    try: tryCatch
+    try: tryCatch,
 }
 
 /* Either End */
@@ -153,5 +166,8 @@ module.exports = {
     propEq,
     reduce,
     Task,
-    Either
+    Either,
+    fold,
+    chain,
+    ap
 }
