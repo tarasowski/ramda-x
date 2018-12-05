@@ -214,6 +214,47 @@ prepareNewAction(null) // TypeError: Cannot read property 'item' of null
 
 ```
 
+## Unsafe I/O Operations with Parsin
+
+```js
+const { Task, Either, prop, compose, trace, map, fold, chain } = require('ramda-x')
+const fs = require('fs')
+
+const getPort = enc => file =>
+    Task((reject, resolve) =>
+        fs.readFile(file, enc, (err, content) =>
+            err ? reject(err) : resolve(content)))
+
+const writePort = file => content =>
+    Task((reject, resolve) =>
+        fs.writeFile(file, content, (err, _) =>
+            err ? reject(err) : resolve('success'))
+    )
+
+const encode = Either.try(JSON.parse)
+const decode = Either.try(JSON.stringify)
+const writeToFile = content => writePort('config2.json')(content)
+
+const eitherToTask = e =>
+    e.fold(Task.rejected, Task.of)
+
+const newPort = compose(
+    chain(writeToFile),
+    chain(eitherToTask),
+    map(decode),
+    map(item => ({ ...item, port: 8939 })),
+    chain(eitherToTask),
+    map(encode),
+    map(item => item),
+    getPort('utf-8'))
+
+
+const preloadedF = newPort('config.json')
+
+preloadedF.fork(err => console.log('comes from an error', err), x => console.log(x)) // success
+
+```
+
 
 ## Some other examples
 
