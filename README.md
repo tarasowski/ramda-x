@@ -179,6 +179,42 @@ const findColor = name =>
 
 const result = findColor('yellow').map(c => c.slice(1)).fold(err => 'nothing found', c => c.toUpperCase())
 ```
+
+## Either - Instead of If/Else + Composition
+```js
+const { Task, Either, prop, compose, trace, map, fold, chain } = require('ramda-x')
+const { fromNullable, Right, Left } = Either
+
+const dispatch = x => console.log('action was dispatched', x)
+const getItem = o => prop('item', o)
+
+const someAction2 = dispatch => data =>
+    compose(
+        fold(e => 'comes from the err function', x => x),
+        map(item => item),
+        map(item => item + 2),
+        chain(item => fromNullable(prop('item3', item))),
+        fromNullable
+    )(data)
+
+const toUpperCase = str => str.toUpperCase()
+
+const someAction3 = dispatch => data =>
+    compose(
+        toUpperCase,
+        getItem
+    )(data)
+
+const prepeareAction = someAction2(dispatch)
+const prepareNewAction = someAction3(dispatch)
+
+prepeareAction(null) // comes from the err function -> the application runs without exiting
+prepareNewAction(null) // TypeError: Cannot read property 'item' of null
+
+
+```
+
+
 ## Some other examples
 
 ```js
