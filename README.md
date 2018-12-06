@@ -58,7 +58,7 @@ result('orange') // no color
 result('white') // no color
 ```
 
-## chain (Either.chain) - Code that never fails
+## ap && chain (Reigth/Left.chain || Right/Left.ap) - Code that never fails
 ```js
 const { Task, Either, prop, compose, trace, map, fold, chain } = require('ramda-x')
 const fs = require('fs')
