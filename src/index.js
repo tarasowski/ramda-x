@@ -57,7 +57,6 @@ const reduce = curry((fn, config, x) =>
 const Task = (computation, cleanup = () => { }) => ({
     fork: computation,
     cleanup,
-    inspect: console.log(`Task(${computation})`),
     map: f =>
         Task((reject, resolve) => computation(a => reject(a), b => resolve(f(b)), cleanup)),
     chain: f =>
@@ -113,6 +112,7 @@ const Task = (computation, cleanup = () => { }) => ({
 
 Task.of = b => Task((_, resolve) => resolve(b))
 Task.rejected = a => Task((reject, _) => reject(a))
+const fork = reject => resolve => b => b.fork(reject, resolve)
 
 /* Task End */
 
@@ -124,7 +124,6 @@ const Right = x =>
         chain: f => f(x),
         map: f => Right(f(x)),
         fold: (f, g) => g(x),
-        inspect: console.log(`Right(${JSON.stringify(x)})`),
     })
 
 
@@ -134,7 +133,6 @@ const Left = x =>
         chain: f => Left(x),
         map: f => Left(x),
         fold: (f, g) => f(x),
-        inspect: console.log(`Left(${JSON.stringify(x)})`),
     })
 
 const fromNullable = x =>
@@ -187,4 +185,5 @@ module.exports = {
     chain,
     ap,
     Box,
+    fork
 }
