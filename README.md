@@ -125,7 +125,7 @@ console.log(
 )
 ```
 
-## ap - safe and concurent IO operations
+## ap - safe and concurent IO operations - Code that never fails
 
 ```js
 const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
@@ -169,7 +169,7 @@ res(reportId).fork(err => 'error', data => console.log(data))
 
 ```
 
-## ap Redux - concurrent IO operations
+## ap Redux - concurrent IO operations - Code that never fails
 
 ```js
 const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
