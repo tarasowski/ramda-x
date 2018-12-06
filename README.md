@@ -169,6 +169,65 @@ res(reportId).fork(err => 'error', data => console.log(data))
 
 ```
 
+## ap Redux - concurrent IO operations
+
+```
+const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
+const request = require('request')
+
+const update = msg => model =>
+    msg.type === 'UPDATE'
+        ? { ...model, report: msg.payload }
+        : msg.type === 'ERROR'
+            ? { ...model, error: msg.error }
+            : model
+
+const dispatch = msg => {
+    let model = {}
+    model = update(msg)(model)
+    reportHeader(model)
+    console.log('UPDATED MODEL', model)
+}
+
+const updateModelMsg = payload => ({ type: 'UPDATE', payload })
+const updateModelErrorMsg = error => ({ type: 'ERROR', error })
+
+
+const url1 = 'https://jsonplaceholder.typicode.com/posts/4'
+const url2 = 'https://jsonplaceholder.typicode.com/posts/2'
+
+const e = () => dispatch(updateModelErrorMsg('value not found'))
+const identity = x => x
+const getTitle = o => Either.fromNullable(o.title)
+const getId = o => Either.fromNullable(o.id)
+
+const reportHeader = p1 => p2 =>
+    `Report: ${p1.chain(getTitle).fold(e, identity)} compared to ${p2.chain(getTitle).fold(e, identity)}`
+
+const reportId = p1 => p2 =>
+    `Report: ${p1.chain(getId).fold(e, identity)} compared to ${p2.chain(getId).fold(e, identity)}`
+
+const parse = Either.try(JSON.parse)
+
+const httpGet = url =>
+    Task((reject, resolve) =>
+        request(url, (err, response, body) =>
+            err ? reject(err) : resolve(parse(body)))
+    )
+
+const res = compose(
+    ap(httpGet(url2)),
+    ap(httpGet(url1)),
+    Task.of
+)
+
+
+res(reportHeader).fork(err => dispatch(updateModelErrorMsg(err)), data => dispatch(updateModelMsg(data)))
+res(reportId).fork(err => 'error', data => dispatch(updateModelMsg(data)))
+// UPDATED MODEL { report: 'Report: 4 compared to 2' }
+// UPDATED MODEL { report: 'Report: eum et est occaecati compared to qui est esse' }
+``` 
+
 ### Example
 
 ```js
