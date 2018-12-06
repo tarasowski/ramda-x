@@ -125,7 +125,7 @@ console.log(
 )
 ```
 
-# ap IO
+## ap - safe IO operations
 
 ```js
 const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
