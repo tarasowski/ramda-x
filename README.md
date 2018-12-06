@@ -232,7 +232,7 @@ res(reportId).fork(err => 'error', data => dispatch(updateModelMsg(data)))
 ## safe I/O Operations with Parsing - Code that never fails
 
 ```js
-const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
+const { Task, Either, prop, compose, trace, map, fold, chain, ap, fork } = require('ramda-x')
 const fs = require('fs')
 
 const readFile = enc => file =>
@@ -260,18 +260,22 @@ const getProperty = b =>
 const eitherToTask = e =>
     e.fold(Task.rejected, Task.of)
 
+const error = e => console.log('from error:', e)
+const success = c => console.log('from success', c)
+
 const transformation = compose(
-    chain(writeToConfigTwo), // Task(value)
-    chain(eitherToTask), // Task(value)
-    map(stringify), // Task(Right(value))
-    chain(eitherToTask), // Task(value)
-    getProperty, // Task(Right(value))
-    chain(eitherToTask), // Task(value)
-    map(parse), // Task(Right(value))
-    readFile('utf-8') // Task(value)
+    fork(error)(success),
+    chain(writeToConfigTwo), // Task(Task(value)) -> Task(value) 
+    chain(eitherToTask), // Task(Right(value)) -> Task(Task(value)) -> Task(value)
+    map(stringify), // returns: Task(Right(value))
+    chain(eitherToTask), // Task(Right(value)) -> Task(Task(value)) -> Task(value)
+    getProperty, // returns:  Task(Right(value))
+    chain(eitherToTask), // Task(Right(value)) -> Task(Task(value)) -> Task(value)
+    map(parse), // returns: Task(Right(value))
+    readFile('utf-8') // returns: Task(value)
 )
 
-transformation('config.json').fork(e => console.log('from error:', e), c => console.log('from fork: ', c))
+transformation('configs.json')
 ```
 
 ### Example
