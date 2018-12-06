@@ -58,6 +58,26 @@ result('orange') // no color
 result('white') // no color
 ```
 
+## chain (Either.chain) - Code that never fails
+```js
+const { Task, Either, prop, compose, trace, map, fold, chain } = require('ramda-x')
+const fs = require('fs')
+
+const readFile = Either.try(fs.readFileSync)
+const parse = Either.try(JSON.parse)
+const showResult = fold(err => 3000,
+    c => c.port)
+
+const result = compose(
+    showResult,
+    chain(parse),
+    readFile
+)
+
+result('config.json') // 8888
+result('conffig.json') // 3000
+```
+
 ### Example
 
 ```js
