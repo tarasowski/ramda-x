@@ -228,6 +228,52 @@ res(reportId).fork(err => 'error', data => dispatch(updateModelMsg(data)))
 // UPDATED MODEL { report: 'Report: eum et est occaecati compared to qui est esse' }
 ``` 
 
+
+## safe I/O Operations with Parsing - Code that never fails
+
+```js
+const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
+const fs = require('fs')
+
+const readFile = enc => file =>
+    Task((reject, resolve) =>
+        fs.readFile(file, enc, (err, content) =>
+            err ? reject(err) : resolve(content)
+        )
+    )
+
+const writeFile = file => content =>
+    Task((reject, resolve) =>
+        fs.writeFile(file, content, (err, success) =>
+            err ? reject(err) : resolve('success')
+        )
+    )
+
+const writeToConfigTwo = writeFile('config2.json')
+
+const parse = Either.try(JSON.parse)
+const stringify = Either.try(JSON.stringify)
+
+const getProperty = b =>
+    Task.of(c => Either.fromNullable(c.port)).ap(b)
+
+const eitherToTask = e =>
+    e.fold(Task.rejected, Task.of)
+
+const transformation = compose(
+    chain(writeToConfigTwo), // Task(value)
+    chain(eitherToTask), // Task(value)
+    map(stringify), // Task(Right(value))
+    chain(eitherToTask), // Task(value)
+    getProperty, // Task(Right(value))
+    chain(eitherToTask), // Task(value)
+    map(parse), // Task(Right(value))
+    readFile('utf-8') // Task(value)
+)
+
+transformation('config.json').fork(e => console.log('from error:', e), c => console.log('from fork: ', c))
+```
+
 ### Example
 
 ```js
@@ -412,60 +458,6 @@ const prepareNewAction = someAction3(dispatch)
 
 prepeareAction(null) // comes from the err function -> the application runs without exiting
 prepareNewAction(null) // TypeError: Cannot read property 'item' of null
-
-
-```
-
-## Unsafe I/O Operations with Parsing
-
-```js
-const { Task, Either, prop, compose, trace, map, fold, chain } = require('ramda-x')
-const fs = require('fs')
-
-const getPort = enc => file =>
-    Task((reject, resolve) =>
-        fs.readFile(file, enc, (err, content) =>
-            err ? reject(err) : resolve(content)))
-
-const writePort = file => content =>
-    Task((reject, resolve) =>
-        fs.writeFile(file, content, (err, _) =>
-            err ? reject(err) : resolve('success'))
-    )
-
-const encode = Either.try(JSON.parse)
-const decode = Either.try(JSON.stringify)
-const writeToFile = content => writePort('config2.json')(content)
-
-const eitherToTask = e =>
-    e.fold(Task.rejected, Task.of)
-
-const newPort = compose(
-    chain(writeToFile),
-    chain(eitherToTask),
-    map(decode),
-    map(item => ({ ...item, port: 8939 })),
-    chain(eitherToTask),
-    map(encode),
-    map(item => item),
-    getPort('utf-8'))
-
-
-const preloadedF = newPort('config.json')
-
-preloadedF.fork(err => console.log('comes from an error', err), x => console.log(x)) // success
-
-/*                                                  */
-const parse = Either.try(JSON.parse)
-
-getPort('utf-8')('config.json') // Task('value')
-    .map(parse) // Either('value')
-    .map(data => data) // Either('value')
-    .map(item => ({ ...item, port: 8222 })) // Either('value')
-    .map(decode) // Either('value)
-    .chain(eitherToTask) // eitherToTask(Right('value'))
-    .chain(writeToFile) // Task('value')
-    .fork(err => console.log(err), data => console.log(data)) // value
 
 
 ```
