@@ -171,7 +171,7 @@ res(reportId).fork(err => 'error', data => console.log(data))
 
 ## ap Redux - concurrent IO operations
 
-```
+```js
 const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
 const request = require('request')
 
