@@ -63,20 +63,29 @@ result('white') // no color
 const { Task, Either, prop, compose, trace, map, fold, chain } = require('ramda-x')
 const fs = require('fs')
 
+// Important: If you'll try to get a non-existing property out of the object, 
+//the app would not return undefined it will return 3000 as default value of the error function, defined in showResult()
+const getProperty = o =>
+    Either.of(p => p).ap(Either.fromNullable(prop('port', o)))
+
 const readFile = Either.try(fs.readFileSync)
 const parseJSON = Either.try(JSON.parse)
+const isPortAvailable = chain(getProperty)
 const parse = chain(parseJSON)
-const showResult = fold(err => 3000,
-    c => c.port)
+const showResult = fold(
+    err => 3000,
+    c => c)
 
 const result = compose(
     showResult,
+    isPortAvailable,
     parse,
     readFile
 )
 
+
 result('config.json') // 8888
-result('conffig.json') // 3000
+result('confffig.json') // 3000
 ```
 
 ### Example
