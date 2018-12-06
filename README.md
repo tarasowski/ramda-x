@@ -66,7 +66,7 @@ const fs = require('fs')
 // Important: If you'll try to get a non-existing property out of the object, 
 //the app would not return undefined it will return 3000 as default value of the error function, defined in showResult()
 const getProperty = o =>
-    Either.of(p => p).ap(Either.fromNullable(prop('port', o)))
+    Either.of(p => p).ap(Either.fromNullable(o.port))
 
 const readFile = Either.try(fs.readFileSync)
 const parseJSON = Either.try(JSON.parse)
