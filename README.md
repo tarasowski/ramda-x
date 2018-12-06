@@ -26,6 +26,38 @@ Ramda X is a super small API with only 10 most important methods for functional 
 
 If you want the full suite, just use the original [Ramda](https://ramdajs.com). 
 
+---
+## Either.fromNullable - Code that never fails!
+
+```js
+const { Task, Either, prop, compose, trace, map, fold, chain } = require('ramda-x')
+
+const findColor = name =>
+    ({ red: '#ff4444', green: '#36599', blue: '#fff68f' })[name]
+
+const getColor = name => Either.fromNullable(findColor(name))
+const sliceBy = str => str.slice(1)
+const upperCaseValue = str => str.toUpperCase()
+const reportError = err => 'no color'
+const showResult = fold(reportError, upperCaseValue)
+const sliceByTwo = map(sliceBy)
+
+
+
+const result = compose(
+    showResult,
+    sliceByTwo,
+    getColor)
+
+
+result('green') // 36599
+result('red') // FF4444
+result('blue') // FFF68F
+result('yellow') // no color
+result('orange') // no color
+result('white') // no color
+```
+
 ### Example
 
 ```js
