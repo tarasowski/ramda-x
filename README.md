@@ -64,13 +64,14 @@ const { Task, Either, prop, compose, trace, map, fold, chain } = require('ramda-
 const fs = require('fs')
 
 const readFile = Either.try(fs.readFileSync)
-const parse = Either.try(JSON.parse)
+const parseJSON = Either.try(JSON.parse)
+const parse = chain(parseJSON)
 const showResult = fold(err => 3000,
     c => c.port)
 
 const result = compose(
     showResult,
-    chain(parse),
+    parse,
     readFile
 )
 
