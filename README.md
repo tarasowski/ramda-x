@@ -100,7 +100,7 @@ const res = Box(add).ap(Box(20)).ap(Box(20)).fold(x => x)
 console.log(
     res // 40
 )
----------------------------------- // ----------------------------------
+//---------------------------------- // ----------------------------------
 const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
 
 const $ = selector =>
