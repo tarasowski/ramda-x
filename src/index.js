@@ -1,10 +1,15 @@
-const util = require('util')
 
-/* A helper for delaying the execution of a function */
+/* Deprecated since version 1.0.05 */
+
+//const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x)
+
+/* Deprecated since version 1.0.05 */
+
+
 const delayed = typeof setImmediate !== 'undefined' ? setImmediate
     : typeof process !== 'undefined' ? process.nextTick
         : /* otherwise */                       setTimeout
-/* End of a helper method for delaying the execution of a function */
+
 
 const trace = label => value => (console.log(`${label}: ${JSON.stringify(value, null, 2)}`), value)
 
@@ -15,12 +20,6 @@ const curry = (fn) => {
             : (...moreArgs) => f1(...[...args, ...moreArgs])
     }
 }
-
-/* Deprecated since version 1.0.05 */
-
-//const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x)
-
-/* Deprecated since version 1.0.05 */
 
 const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x)
 
@@ -53,73 +52,71 @@ const reduce = curry((fn, config, x) =>
 
 /* Task Start */
 
-const Task = (fork = computation, cleanup = () => { }) => ({
-    fork,
-    inspect: console.log(`Task(--- ${fork.toString()} ---)`),
+
+
+const Task = (computation, cleanup = () => { }) => ({
+    fork: computation,
     cleanup,
+    inspect: console.log(`Task(${computation})`),
     map: f =>
-        Task((reject, resolve) => fork(a => reject(a), b => resolve(f(b))), cleanup),
+        Task((reject, resolve) => computation(a => reject(a), b => resolve(f(b)), cleanup)),
     chain: f =>
-        Task((reject, resolve) => fork(a => reject(a), b => f(b).fork(reject, resolve)), cleanup),
-    ap: b2 =>
-        Task((reject, resolve) => {
+        Task((reject, resolve) => computation(a => reject(a), b => f(b).fork(reject, resolve), cleanup)),
+    ap: b2 => Task((reject, resolve) => {
 
-            let func = false
-            let funcLoaded = false
-            let val = false
-            let valLoaded = false
-            let rejected = false
-            let allState
+        let func = false
+        let funcLoaded = false
+        let val = false
+        let valLoaded = false
+        let rejected = false
+        let allState
 
-            const cleanupBoth = state => {
-                state[0] = {}
-                state[1] = {}
-            }
+        const cleanupBoth = state => {
+            state[0] = {}
+            state[1] = {}
+        }
 
-            const guardResolve = setter => {
-                return (x) => {
-                    if (rejected) {
-                        return
-                    }
-                    setter(x)
-                    if (funcLoaded && valLoaded) {
-                        delayed(() => cleanupBoth(allState))
-                        return resolve(func(val))
-                    } else {
-                        return x
-                    }
+        const guardResolve = setter => {
+            return (x) => {
+                if (rejected) {
+                    return
+                }
+                setter(x)
+                if (funcLoaded && valLoaded) {
+                    delayed(() => cleanupBoth(allState))
+                    return resolve(func(val))
+                } else {
+                    return x
                 }
             }
-            const guardReject = x => {
-                if (!rejected) {
-                    rejected = true
-                    return reject(x)
-                }
+        }
+        const guardReject = x => {
+            if (!rejected) {
+                rejected = true
+                return reject(x)
             }
+        }
 
-            const thisState = computation(guardReject, guardResolve((x) => {
-                funcLoaded = true
-                func = x
-            }))
+        const thisState = computation(guardReject, guardResolve((x) => {
+            funcLoaded = true
+            func = x
+        }))
 
-            const thatState = b2.fork(guardReject, guardResolve((x) => {
-                valLoaded = true
-                val = x
-            }))
-            return allState = [thisState, thatState]
-        })
+        const thatState = b2.fork(guardReject, guardResolve((x) => {
+            valLoaded = true
+            val = x
+        }))
+        return allState = [thisState, thatState]
+    })
 
 })
 
-Task.of = b =>
-    Task((_, resolve) => resolve(b))
-Task.rejected = a =>
-    Task((reject, _) => reject(a))
+Task.of = b => Task((_, resolve) => resolve(b))
+Task.rejected = a => Task((reject, _) => reject(a))
 
 /* Task End */
 
 /* Either Start */
-
 
 const Right = x =>
     ({
@@ -127,7 +124,7 @@ const Right = x =>
         chain: f => f(x),
         map: f => Right(f(x)),
         fold: (f, g) => g(x),
-        inspect: console.log(`Right(--- ${util.inspect(x, { showHidden: false, depth: null })} ---)`)
+        inspect: console.log(`Right(${JSON.stringify(x)})`),
     })
 
 
@@ -137,7 +134,7 @@ const Left = x =>
         chain: f => Left(x),
         map: f => Left(x),
         fold: (f, g) => f(x),
-        inspect: console.log(`Left(--- ${util.inspect(x, { showHidden: false, depth: null })} ---)`)
+        inspect: console.log(`Left(${JSON.stringify(x)})`),
     })
 
 const fromNullable = x =>
@@ -153,6 +150,7 @@ const tryCatch = f => x => {
     }
 }
 
+
 const Either = {
     Right,
     Left,
@@ -162,6 +160,17 @@ const Either = {
 }
 
 /* Either End */
+
+/* Box - Just for demo purposes */
+const Box = x => ({
+    ap: b2 => b2.map(x),
+    chain: f => f(x),
+    map: f => Box(f(x)),
+    fold: f => f(x),
+    inspect: () => `Box(${x})`
+})
+
+/* End of Box */
 
 module.exports = {
     curry,
@@ -176,5 +185,6 @@ module.exports = {
     Either,
     fold,
     chain,
-    ap
+    ap,
+    Box,
 }
