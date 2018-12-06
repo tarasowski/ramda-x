@@ -125,6 +125,50 @@ console.log(
 )
 ```
 
+# ap IO
+
+```js
+const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
+const request = require('request')
+
+const url1 = 'https://jsonplaceholder.typicode.com/posts/4'
+const url2 = 'https://jsonplaceholder.typicode.com/posts/2'
+
+const e = e => 'error'
+const identity = x => x
+const getTitle = o => Either.fromNullable(o.title).fold(e, identity)
+const getId = o => Either.fromNullable(o.id).fold(e, identity)
+
+const reportHeader = p1 => p2 =>
+    `Report: ${p1.fold(e, body => getTitle(body))} compared to ${p2.fold(e, body => getTitle(body))}`
+
+const reportId = p1 => p2 =>
+    `Report: ${p1.fold(e, body => getId(body))} compared to ${p2.fold(e, body => getId(body))}`
+
+const parse = Either.try(JSON.parse)
+
+const httpGet = url =>
+    Task((reject, resolve) =>
+        request(url, (err, response, body) =>
+            err ? reject(err) : resolve(parse(body)))
+    )
+
+const res = compose(
+    ap(httpGet(url2)),
+    ap(httpGet(url1)),
+    Task.of
+)
+
+
+res(reportHeader).fork(err => 'error', data => console.log(data))
+// Report: eum et est occaecati compared to qui est esse
+
+res(reportId).fork(err => 'error', data => console.log(data))
+// Report: 4 compared to 2
+
+
+```
+
 ### Example
 
 ```js
