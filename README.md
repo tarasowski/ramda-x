@@ -88,7 +88,7 @@ result('config.json') // 8888
 result('confffig.json') // 3000
 ```
 
-## Currying with Types (Boxes)
+## Currying with Types (Boxes & Either)
 
 ```js
 const { Box } = require('ramda-x')
@@ -99,6 +99,29 @@ const res = Box(add).ap(Box(20)).ap(Box(20)).fold(x => x)
 
 console.log(
     res // 40
+)
+---------------------------------- // ----------------------------------
+const { Task, Either, prop, compose, trace, map, fold, chain, ap } = require('ramda-x')
+
+const $ = selector =>
+    Either.of({ selector, height: 10 })
+
+
+const getScreenSize = screen => head => foot =>
+    screen - (head.height + foot.height)
+
+
+const result = compose(
+    fold(err => 'error', x => x),
+    ap($('hooter')),
+    ap($('header')),
+    Either.of,
+    getScreenSize
+)
+
+console.log(
+    result(800), // 780
+    result(1500) // 1480
 )
 ```
 
