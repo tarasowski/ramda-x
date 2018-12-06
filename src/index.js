@@ -141,7 +141,7 @@ const Left = x =>
     })
 
 const fromNullable = x =>
-    x !== null ? Right(x) : Left(x)
+    x === null || x === undefined ? Left(null) : Right(x)
 
 const of = x => Right(x)
 
