@@ -88,6 +88,20 @@ result('config.json') // 8888
 result('confffig.json') // 3000
 ```
 
+## Currying with Types (Boxes)
+
+```js
+const { Box } = require('ramda-x')
+
+const add = x => y => x + y
+const res = Box(add).ap(Box(20)).ap(Box(20)).fold(x => x)
+
+
+console.log(
+    res // 40
+)
+```
+
 ### Example
 
 ```js
