@@ -1,6 +1,6 @@
 {
   "name": "ramda-x",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "This is a super slim API version of original Ramda. It has only X (10) the most important methods.",
   "main": "src/index.js",
   "scripts": {
