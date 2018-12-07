@@ -1,69 +1,25 @@
 /* Task Start */
 
-
-const delayed = typeof setImmediate !== 'undefined' ? setImmediate
-    : typeof process !== 'undefined' ? process.nextTick
-        : /* otherwise */                       setTimeout
+const compose = (...fns) => x =>
+    fns.reduceRight((v, f) => f(v), x)
 
 
-const Task = (computation, cleanup = () => { }) => ({
+const Task = computation => ({
     fork: computation,
-    cleanup,
-    map: f =>
-        Task((reject, resolve) => computation(a => reject(a), b => resolve(f(b)), cleanup)),
-    chain: f =>
-        Task((reject, resolve) => computation(a => reject(a), b => f(b).fork(reject, resolve), cleanup)),
-    ap: b2 => Task((reject, resolve) => {
-
-        let func = false
-        let funcLoaded = false
-        let val = false
-        let valLoaded = false
-        let rejected = false
-        let allState
-
-        const cleanupBoth = state => {
-            state[0] = {}
-            state[1] = {}
-        }
-
-        const guardResolve = setter => {
-            return (x) => {
-                if (rejected) {
-                    return
-                }
-                setter(x)
-                if (funcLoaded && valLoaded) {
-                    delayed(() => cleanupBoth(allState))
-                    return resolve(func(val))
-                } else {
-                    return x
-                }
-            }
-        }
-        const guardReject = x => {
-            if (!rejected) {
-                rejected = true
-                return reject(x)
-            }
-        }
-
-        const thisState = computation(guardReject, guardResolve((x) => {
-            funcLoaded = true
-            func = x
-        }))
-
-        const thatState = b2.fork(guardReject, guardResolve((x) => {
-            valLoaded = true
-            val = x
-        }))
-        return allState = [thisState, thatState]
-    })
-
+    map(fn) {
+        return Task((reject, resolve) => this.fork(reject, compose(resolve, fn)));
+    },
+    chain(fn) {
+        return Task((reject, resolve) => this.fork(reject, x => fn(x).fork(reject, resolve)));
+    },
+    ap(f) {
+        return this.chain(fn => f.map(fn))
+    }
 })
 
-Task.of = b => Task((_, resolve) => resolve(b))
+Task.of = x => Task((_, resolve) => resolve(x))
 Task.rejected = a => Task((reject, _) => reject(a))
+
 
 /* Task End */
 
