@@ -27,6 +27,61 @@ Ramda X is a super small API with only 10 most important methods for functional 
 If you want the full suite, just use the original [Ramda](https://ramdajs.com). 
 
 ---
+
+## When to use what? - Code that never fails!
+
+```js
+const { Task, Either, Box, compose, map, fold, chain, ap, fork, trace } = require('ramda-x')
+const fs = require('fs')
+
+// we are using Task in order not to grab the state directly
+// by doing so we isolate the side-effects and make our app more safely
+
+// Use Task for side-effects: console.log, process.arg, http calls, db calls, read/write -> ASYNCHRONOUS CODE
+const argv = Task((reject, resolve) => resolve(process.argv))
+
+const httpGet = Task((reject, resolve) =>
+    request(url, (err, res, body) =>
+        err ? reject(err) : resolve(body)))
+
+const readFile = enc => file => Task((reject, resolve) =>
+    fs.readFile(file, enc, (err, content) =>
+        err ? reject(err) : resolve(content)))
+
+const file = readFile('utf-8')
+file('config.json').fork(console.error, console.log)
+
+
+// Use Eiter.try for JSON.parse/JSON.stringify -> SYNCHRONOUS CODE
+const parse = Either.try(JSON.parse)
+
+const readFileSync = Either.try(fs.readFileSync)
+
+const result = readFileSync('config.json')
+
+result.fold(console.error, console.log)
+
+
+
+// Use Either.fromNullable when you are trying to get properties out of an object object.property
+
+const first = ({ name }) =>
+    Either.fromNullable(name)
+
+
+const name = compose(
+    chain(first),
+    Either.of
+)
+
+const myName = name({ name: 'Dimitri' })
+const herName = name({ name: 'Anastasia' })
+
+myName.fold(console.error, console.log)
+herName.fold(console.error, console.log)
+
+```
+
 ## Either.fromNullable - Code that never fails!
 
 ```js
