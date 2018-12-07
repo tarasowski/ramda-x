@@ -1,6 +1,5 @@
 const Task = require('./task')
 const Either = require('./either')
-const Box = require('./box')
 
 const trace = label => value => (console.log(`${label}: ${JSON.stringify(value, null, 2)}`), value)
 
@@ -60,6 +59,5 @@ module.exports = {
     fold,
     chain,
     ap,
-    Box,
     fork
 }
