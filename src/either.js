@@ -1,10 +1,13 @@
 /* Either Start */
 
+const isNothing = x =>
+    x === null || x === undefined
+
 const Right = x =>
     ({
         ap: b2 => b2.map(x),
-        chain: f => f(x),
-        map: f => Right(f(x)),
+        chain: f => isNothing(x) ? Right(x) : f(x),
+        map: f => isNothing(x) ? Right(x) : Right(f(x)),
         fold: (f, g) => g(x),
     })
 
