@@ -17,7 +17,7 @@ const Task = computation => ({
     }
 })
 
-Task.of = x => Task((_, resolve) => resolve(x))
+Task['of'] = x => Task((_, resolve) => resolve(x))
 Task.rejected = a => Task((reject, _) => reject(a))
 
 
