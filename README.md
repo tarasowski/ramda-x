@@ -26,6 +26,34 @@ Ramda X is a super small API with only 10 most important methods for functional 
 
 If you want the full suite, just use the original [Ramda](https://ramdajs.com). 
 
+## Algebraic Typologies
+
+```js
+// Functor
+Box.of(20).map(x => x / 2)
+//Box(10)
+
+// Modan
+Box.of(true).chain(x => Box.of(!x))
+// Box(false)
+
+// Monoid
+Box.of('small').concat(Box.of('pox'))
+// Box('smallpox')
+
+// Applicative
+Box.of(x => x + 1).ap(2)
+// Box(3)
+
+// Traversable
+Box.of(3).traverse(Either.x, x => fromNullable(x))
+// Right(Box(3))
+
+// Natural transformation
+eitherToBox(fromNullable(null))
+// Box(null)
+```
+
 ---
 
 ## When to use what? - Code that never fails!
