@@ -29,6 +29,8 @@ If you want the full suite, just use the original [Ramda](https://ramdajs.com).
 ## Algebraic Typologies
 
 ```js
+// Source: https://github.com/DrBoolean
+
 // Functor
 Box.of(20).map(x => x / 2)
 //Box(10)
