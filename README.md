@@ -35,7 +35,7 @@ If you want the full suite, just use the original [Ramda](https://ramdajs.com).
 Box.of(20).map(x => x / 2)
 //Box(10)
 
-// Modan
+// Monad
 Box.of(true).chain(x => Box.of(!x))
 // Box(false)
 
