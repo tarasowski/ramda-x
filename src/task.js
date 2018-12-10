@@ -1,5 +1,3 @@
-/* Task Start */
-
 const compose = (...fns) => x =>
     fns.reduceRight((v, f) => f(v), x)
 
@@ -20,7 +18,5 @@ const Task = computation => ({
 Task.of = x => Task((_, resolve) => resolve(x))
 Task.rejected = a => Task((reject, _) => reject(a))
 
-
-/* Task End */
 
 module.exports = Task

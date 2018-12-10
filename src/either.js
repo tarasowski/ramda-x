@@ -1,5 +1,3 @@
-/* Either Start */
-
 const isNothing = x =>
     x === null || x === undefined
 
@@ -41,7 +39,5 @@ const Either = {
     of,
     try: tryCatch,
 }
-
-/* Either End */
 
 module.exports = Either
