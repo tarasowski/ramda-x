@@ -363,6 +363,39 @@ const transformation = compose(
 transformation('configs.json')
 ```
 
+## Traversable with Lists
+
+```js
+const { Task } = require('ramda-x')
+const fs = require('fs')
+
+
+const readFile = file =>
+    Task((reject, resolve) =>
+        fs.readFile(file, 'utf-8', (err, content) =>
+            err ? reject(err) : resolve(content)))
+
+
+const List = xs => ({
+    concat: x => List(xs.concat(x)),
+    map: fn => List(xs.map(fn)),
+    reduce: (f, i) => List(xs.reduce(f, i)),
+    fold: f => f(xs),
+    traverse(of, fn) {
+        return xs.reduce(
+            (f, a) => fn(a).map(b => bs => bs.concat(b)).ap(f),
+            of(List([]))
+        )
+    }
+})
+
+
+const files = List(['config.json', 'config2.json'])
+
+
+files.traverse(Task.of, fn => readFile(fn)).fork(console.error, x => x.map(x => x + '!!!').fold(x => x))
+``´
+
 ### Example
 
 ```js
