@@ -1,5 +1,6 @@
 const Task = require('./task')
 const Either = require('./either')
+const List = require('./list')
 
 const trace = label => value => (console.log(`${label}: ${JSON.stringify(value, null, 2)}`), value)
 
@@ -56,6 +57,7 @@ module.exports = {
     reduce,
     Task,
     Either,
+    List,
     fold,
     chain,
     ap,
