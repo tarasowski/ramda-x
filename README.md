@@ -609,42 +609,28 @@ const incrementCounter = list => index =>
     ]
 
 
-const testIncrementCounter = () => {
-    const listBefore = [0, 10, 20]
-    const listAfter = [0, 11, 20]
-
-    deepFreeze(listBefore)
-
+const testAddCounter = before => after =>
     expect(
-        incrementCounter(listBefore)(1)
-    ).toEqual(listAfter)
-}
+        addCounter(deepFreeze(before)) // deepFreeze makes the value immutable
+    ).toEqual(after)
 
-const testAddCounter = () => {
-    const listBefore = []
-    const listAfter = [0]
-    deepFreeze(listBefore) // to make an object immutable
+
+testAddCounter([])([0])
+
+const testRemoveCounter = before => after =>
     expect(
-        addCounter(listBefore)
-    ).toEqual(listAfter)
-}
+        removeCounter(deepFreeze(before))(1)
+    ).toEqual(after)
 
-const testRemoveCounter = () => {
-    const listBefore = [0, 10, 20]
-    const listAfter = [0, 20]
-    deepFreeze(listBefore) // to make an object immutable
+testRemoveCounter([0, 10, 20])([0, 20])
 
+const testIncrementCounter = before => after =>
     expect(
-        removeCounter(listBefore)(1)
-    ).toEqual(listAfter)
-}
-
-testAddCounter()
-testRemoveCounter()
-testIncrementCounter()
+        incrementCounter(deepFreeze(before))(1) // deepFreeze makes the value immutable
+    ).toEqual(after)
 
 
-
+testIncrementCounter([0, 10, 20])([0, 11, 20])
 ```
 
 ## Some other examples
