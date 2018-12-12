@@ -10,6 +10,8 @@ const freezeProperties = o =>
             : o
     )
 
-const deepFreeze = compose(freezeProperties, freezeObject)
+const deepFreeze = o =>
+    compose(freezeProperties, freezeObject)(o)
+
 
 module.exports = deepFreeze
