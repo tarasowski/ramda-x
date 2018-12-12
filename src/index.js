@@ -1,6 +1,7 @@
 const Task = require('./task')
 const Either = require('./either')
 const List = require('./list')
+const deepFreeze = require('./deep-freeze')
 
 const trace = label => value => (console.log(`${label}: ${JSON.stringify(value, null, 2)}`), value)
 
@@ -61,5 +62,6 @@ module.exports = {
     fold,
     chain,
     ap,
-    fork
+    fork,
+    deepFreeze
 }
