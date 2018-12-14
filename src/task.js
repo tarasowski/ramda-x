@@ -13,7 +13,7 @@ const map = o => ({
     }
 })
 
-// Moand
+// Monad
 const chain = o => ({
     ...o, ...{
         chain(fn) {
