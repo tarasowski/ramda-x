@@ -3,6 +3,8 @@ const compose = (...fns) => x =>
 
 
 const fork = computation => ({ fork: computation })
+
+// Functor
 const map = o => ({
     ...o, ...{
         map(fn) {
@@ -10,6 +12,8 @@ const map = o => ({
         }
     }
 })
+
+// Moand
 const chain = o => ({
     ...o, ...{
         chain(fn) {
@@ -17,6 +21,8 @@ const chain = o => ({
         }
     }
 })
+
+// Applicative
 const ap = o => ({
     ...o, ...{
         ap(f) {
