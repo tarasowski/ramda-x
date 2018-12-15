@@ -1,6 +1,6 @@
 # Ramda X
 
-Disclaimer: Don't use it for production projects. There are always some breaking changes.
+###Important: Don't use it for production projects. There are always some breaking changes.
 
 Ramda X is a super small API with only 10 most important methods for functional programming. Original Ramda library is too big and abstracts almost everything away from the JavaScript language. That's why Ramda X uses the most important methods and leaves everything as it is. All implemented methods are auto-curried!!!
 
