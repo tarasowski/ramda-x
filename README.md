@@ -340,7 +340,7 @@ const writeFile = file => content =>
 const writeToConfigTwo = writeFile('config2.json')
 
 const parse = Either.try(JSON.parse)
-const stringify = Either.try(JSON.stringify)
+const stringify = Either.try(JSON.stringify)/:/
 
 const getProperty = b =>
     Task.of(c => Either.fromNullable(c.port)).ap(b)
@@ -397,7 +397,7 @@ const files = List(['config.json', 'config2.json'])
 
 
 files.traverse(Task.of, fn => readFile(fn)).fork(console.error, x => x.map(x => x + '!!!').fold(x => x))
-``´
+``
 
 ### Example
 
